@@ -15,7 +15,7 @@ import sys
 import lcm
 import pandas as pd
 
-from . import event_data, event_headers
+from .process import event_data, event_headers
 
 
 def to_dataframe(in_file: list, channels: dict, package: str = 'gss'):
