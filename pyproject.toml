@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lcmto"
+version = "0.2.0"
+description = "A package for parsing LCM log files"
+authors = [
+    { name = "Eric Martin (MBARI)", email = "emartin@mbari.org" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["LCM", "log", "parsing"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "pandas",
+    "lcm"
+]
+
+[project.urls]
+homepage = "https://github.com/mbari-org/lcmto"
+repository = "https://github.com/mbari-org/lcmto"
+documentation = "https://github.com/mbari-org/lcmto/wiki"
+
+[tool.hatch.version]
+path = "src/lcmto/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["src/**"]
+
+[tool.hatch.build.targets.wheel]
+include = ["src/**"]
