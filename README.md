@@ -4,15 +4,17 @@ This is a simple package for use on Python (>3.6) that facilitates conversion of
 
 ## Installation
 
-You must have LCM installed, and source can be found on the [LCM Github page](https://lcm-proj.github.io).
+See package dependencies in `requirements.txt`
 
-Install the package by navigating to the directory containing `setup.py` and execute the following command:
+Using `pip`:
 
-    python setup.py build && python setup.py install
-    
+    python -m pip install -r requirements.txt
+    python -m hatchling build
+    python -m pip install dist/lcmto-0.2.0-py2.py3-none-any.whl
+
 ## Getting Started
 
-Once installed, this utility assumes you have employed [`lcm-gen`](https://linux.die.net/man/1/lcm-gen) to generate types and have those available to your python environment, either installed in your site-packages, or referenced through export of `PYTHONPATH` or within code using `sys.path.append`. 
+Once installed, this utility assumes you have employed [`lcm-gen`](https://linux.die.net/man/1/lcm-gen) to generate types and have those available to your python environment, either installed in your site-packages, or referenced through export of `PYTHONPATH` or within code using `sys.path.append`.
 
 ### Reading in a Dataframe
 
@@ -20,5 +22,5 @@ See the help for `lcmto.dataframe()`
 
 ### Creating a CSV-file
 
-See the help for `lcmto.csv()'
+See the help for `lcmto.csv()`
 
