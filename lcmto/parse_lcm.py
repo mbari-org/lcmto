@@ -17,8 +17,13 @@ import pandas as pd
 
 from .process import event_data, event_headers
 
+from datetime import datetime
+def iso_to_microseconds(iso_time_str):
+    dt = datetime.fromisoformat(iso_time_str)
+    epoch = datetime(1970, 1, 1)
+    return int((dt - epoch).total_seconds() * 1e6)
 
-def to_dataframe(in_file: list, channels: dict, package: str = 'gss'):
+def to_dataframe(in_file: list, channels: dict, package: str = 'gss', start_time: str = None, end_time: str = None):
     """
     function that parses an lcm logfile given channels and their types. you
     must import the lcm type packages prior to call to this function.
@@ -28,41 +33,66 @@ def to_dataframe(in_file: list, channels: dict, package: str = 'gss'):
     :return: a dict of dataframes for each channel requested
     """
 
-    i = 0
+    i, ct = 0, 0
     rows = list()
     # load the logfile for reading
 
     data = dict()
     colnames = dict()
     dframe = dict()
+    start_time_microsecs = 0
+    end_time_microsecs = 1e10
+
+    # check for time filtering
+    if start_time is not None or end_time is not None:
+        if start_time is not None:
+            start_time_microsecs = iso_to_microseconds(start_time)
+        if end_time is not None:
+            end_time_microsecs = iso_to_microseconds(end_time)
+        
+    sys.stderr.write(f"Filter: START {start_time_microsecs} | END {end_time_microsecs}\r\n")
 
     for chan, module in channels.items():
         data[chan] = list()
         colnames[chan] = None
         dframe[chan] = None
 
-    # print(data)
+    
+
     for log_name in in_file:
 
         sys.stderr.write("Processing File: %s\r\n" % log_name)
+        printed_eventtime = False
         log = lcm.EventLog(log_name, "r")
 
         for event in log:
-            if event.channel in channels.keys():
+            if not printed_eventtime: 
+                sys.stderr.write(f"First event in file: {event.timestamp}\r\n")
+                printed_eventtime = True
 
-                # data
-                data[event.channel].append(event_data(event, package, channels[event.channel]))
-
-                # head
-                if colnames[event.channel] is None: colnames[event.channel] = event_headers(event, package,
-                                                                                            channels[event.channel])
-
-                i += 1
-
-                # Write out a progress into stderr
+            # Write out a progress into stderr
+            ct += 1
+            if ct % 10000 == 0:
                 percent_done = float(log.tell()) / float(log.size()) * 100.0
                 sys.stderr.write('Progress: %10.2f | Records Found: %i\r' % (percent_done, i))
                 sys.stderr.flush()
+
+            # time filter
+            if event.timestamp < start_time_microsecs:
+                continue
+            elif event.timestamp > end_time_microsecs:
+                sys.stderr.write("Last message encountered: leaving file.\r\n")
+                break
+            if event.channel in channels.keys():
+
+                    # data
+                    data[event.channel].append(event_data(event, package, channels[event.channel]))
+
+                    # head
+                    if colnames[event.channel] is None: colnames[event.channel] = event_headers(event, package,
+                                                                                                channels[event.channel])
+
+                    i += 1
 
     sys.stderr.write('\n')
 

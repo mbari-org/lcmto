@@ -10,7 +10,7 @@ from .parse_lcm import to_dataframe
 
 
 # lcmto.csv('test.csv',['lcmlog-2019-09-27.01'],'OCEANIMAGING_SLEDCONTROLLER','sled_control_t','oi')
-def lcm_to_csv(out_file: str, in_file: list, channel: str, data_type: str, package: str):
+def lcm_to_csv(out_file: str, in_file: list, channel: str, data_type: str, package: str, start_time: str = None, end_time: str = None):
     """
     converts a list of logfiles into a single concatenated csv file
     :param out_file: destination name and path for csv file
@@ -21,7 +21,7 @@ def lcm_to_csv(out_file: str, in_file: list, channel: str, data_type: str, packa
     :return:
     """
 
-    df = to_dataframe(in_file, {channel: data_type}, package)
+    df = to_dataframe(in_file, {channel: data_type}, package, start_time, end_time)
 
     print(f'Writing to CSV-file: {out_file}')
     df[channel].to_csv(out_file, index=False)
