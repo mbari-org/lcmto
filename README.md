@@ -23,4 +23,3 @@ See the help for `lcmto.dataframe()`
 ### Creating a CSV-file
 
 See the help for `lcmto.csv()`
-
