@@ -1,0 +1,21 @@
+[project]
+name = "lcmto"
+version = "1.1.0"
+description = "This is a tool to convert LCM log files to formats like CSV or JSON, leveraging Pandas libraries to creat dataframes for each channel found in the file. At present this tool supports use as a converter to CSV and to Pandas DataFrames."
+readme = "README.md"
+authors = [
+    { name = "Eric Martin", email = "emartin@mbari.org" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "compas-lcmtypes>=0.3.0",
+    "lcm>=1.5.1",
+    "pandas>=2.3.1",
+]
+
+[project.scripts]
+lcmto = "lcmto:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
